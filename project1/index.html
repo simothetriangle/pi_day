@@ -27,15 +27,20 @@
             if (onmousedown) {
                 console.log(down);
             }
-            document.addEventListener('mousedown', handleEvent, false);
-            if(mouse_ck === 1) {document.addEventListener('mousemove', handleEvent, false);}
-            document.addEventListener('mouseup', handleEvent, false);
+/*          document.addEventListener('mousedown', handleEvent, false);
+            if(mouse_ck === 1) {
+                console.log("moving");
+                document.addEventListener('mousemove', handleEvent, false);
+            }
+            document.addEventListener('mouseup', handleEvent, false);*/
 
             setInterval(update, 0);
         }
 
         function update() {
-            
+            document.addEventListener('mousedown', handleEvent, false);
+            document.addEventListener('mousemove', handleEvent, false);
+            document.addEventListener('mouseup', handleEvent, false);
         }
 
         function handleEvent(evt) {
@@ -45,7 +50,9 @@
                     mouse_ck = 1;
                     break;
                 case "mousemove":
-                    console.log(evt.clientX, evt.clientY);
+                    if( mouse_ck === 1){
+                        console.log(evt.clientX, evt.clientY);
+                    }
                     break;
                 case "mouseup" :
                     console.log(evt.clientX, evt.clientY, " up");
