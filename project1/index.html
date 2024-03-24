@@ -5,9 +5,72 @@
         <link rel="stylesheet" href="css/style.css">
         <title>container</title>
     </head>
-    <script>
+
+    <script type="text/javascript">
+        var _ctx;
+        var _ox = 0;
+        var _oy = 0;
         
+        var mouse_ck = 0;
+        var mouse_x ;
+
+        window.onload = function() {
+            var canvas = document.getElementById('canvas');
+            _ctx = canvas.getContext('2d');
+            // canvas 좌표크기설정
+            _ctx.canvas.width = 2000; //!!
+            _ctx.canvas.height = canvas.clientHeight / canvas.clientWidth * _ctx.canvas.width;
+            _ox = _ctx.canvas.width / 2;
+            _oy = _ctx.canvas.height / 2;
+            console.log(_ctx);
+
+            if (onmousedown) {
+                console.log(down);
+            }
+            document.addEventListener('mousedown', handleEvent, false);
+            if(mouse_ck === 1) {document.addEventListener('mousemove', handleEvent, false);}
+            document.addEventListener('mouseup', handleEvent, false);
+
+            setInterval(update, 0);
+        }
+
+        function update() {
+            
+        }
+
+        function handleEvent(evt) {
+            switch (evt.type){
+                case "mousedown" :
+                    console.log(evt.clientX, evt.clientY, " down");
+                    mouse_ck = 1;
+                    break;
+                case "mousemove":
+                    console.log(evt.clientX, evt.clientY);
+                    break;
+                case "mouseup" :
+                    console.log(evt.clientX, evt.clientY, " up");
+                    mouse_ck = 0;
+                    break;
+                default:
+                    console.log(evt);
+                    break;
+            }
+        }
+
+        function drawLine(x1, y1, x2, y2, color) {
+            _ctx.beginPath();
+            _ctx.moveTo(x1 + _ox, y1 + _oy);
+            _ctx.lineTo(x2 + _ox, y2 + _oy);
+            _ctx.closePath();
+            _ctx.lineWidth = 1;
+            _ctx.strokeStyle = color;
+            _ctx.stroke();
+        }
+
+
+
     </script>
+
     <body>
         <canvas id="canvas"></canvas>
     </body>
