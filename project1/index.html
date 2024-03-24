@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+<head>
+    <style type="text/css">
+        html {
+            width:100%;
+            height:100%;
+        }
+        
+        body {
+            position: relative;
+            width: 100%;
+            height: calc(100% + 1px);
+            margin:0; padding:0; border:0;
+            overflow: hidden;
+        }
+        
+        #canvas {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgb(255, 255, 255);
+        }
+        </style>
+</head>
+
+<script type="text/javascript">
+var _ctx;
+var _ox = 0;
+var _oy = 0;
+
+window.onload = function() {
+	var canvas = document.getElementById('canvas');
+    _ctx = canvas.getContext('2d');
+    // canvas 좌표크기설정
+    _ctx.canvas.width = 2000; //!!
+    _ctx.canvas.height = canvas.clientHeight / canvas.clientWidth * _ctx.canvas.width;
+    _ox = _ctx.canvas.width / 2;
+    _oy = _ctx.canvas.height / 2;
+    console.log(_ctx);
+
+    drawGraph();
+
+    setInterval(update, 0);
+}
+
+var c = 5;
+var x = 0;
+
+function update() {
+
+    if (x > 500)
+        c = -5;
+    if (x < -500)
+        c = 5;
+
+    x += c;
+
+    drawGraph();
+}
+
+function drawLine(x1, y1, x2, y2, color) {
+    _ctx.beginPath();
+    _ctx.moveTo(x1 + _ox, y1 + _oy);
+    _ctx.lineTo(x2 + _ox, y2 + _oy);
+    _ctx.closePath();
+    _ctx.lineWidth = 1;
+    _ctx.strokeStyle = color;
+    _ctx.stroke();
+}
+
+function drawGraph() {
+    _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
+
+    drawLine(0, 0, x, Math.sin(x / 50) * 100, "rgb(200,0,0)");
+    drawLine(0, 0, -x, Math.sin(x / 50) * 100, "rgb(0,0,250)");
+}
+
+/*
+drawImage:function( img_key, x_center, y_center, w_scale, h_scale, frame, arg ) {
+    var i = this;
+    var ctx = i.ctx();
+    var img = i.getImg(img_key);
+    if ( img == null || img.img == null )
+        return;
+    if ( w_scale == null )
+        w_scale = 1;
+    if ( h_scale == null )
+        h_scale = 1;
+    if ( frame == null )
+        frame = 0;
+    var w = img.img.width;
+    if ( img.xcut != null )
+        w /= img.xcut;
+    var h = img.img.height;
+    if ( img.ycut != null )
+        h /= img.ycut;
+    var fx = frame;
+    var wx = parseInt(img.img.width / w);
+    var fy = Math.floor(fx / wx);
+    fx %= wx;
+    ctx.save();
+    ctx.translate(x_center, y_center);
+    ctx.scale(w_scale, h_scale);
+    var ox = 0;
+    var ow = w;
+    var oy = 0;
+    var oh = h;
+    if ( arg != null )
+    {
+        if ( arg.angle != null )
+            ctx.rotate(arg.angle);
+        
+        if ( arg.src != null )
+        {
+            ox = arg.src.left;
+            ow = arg.src.width;
+            oy = arg.src.top;
+            oh = arg.src.height;
+        }
+    }
+    if ( ow > 0 && oh > 0 )
+        ctx.drawImage(img.img, w * fx + ox, h * fy + oy, ow, oh, (w + ox) / -2, (h + oy) / -2, ow, oh);
+    ctx.restore();
+},
+drawText:function( txt, x, y, color, align, font, colorStroke, widthStroke ) {
+    var i = this;
+    var ctx = i.ctx();
+    if ( font == null )
+        font = "";
+    ctx.font = font;
+    ctx.fillStyle = color;
+    ctx.textAlign = (align != null) ? align : "left";
+    if ( colorStroke != null )
+    {
+        ctx.lineJoin = "bevel";
+        ctx.strokeStyle = colorStroke;
+        if ( widthStroke != null )
+            ctx.lineWidth = widthStroke;
+        ctx.strokeText(txt, x, y);
+    }
+    ctx.fillText(txt, x, y);
+}*/
+</script>
+
+<body>
+	<canvas id='canvas'></canvas>
+</body>
+</html>
