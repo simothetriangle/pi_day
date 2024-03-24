@@ -41,6 +41,8 @@ window.onload = function() {
     _oy = _ctx.canvas.height / 2;
     console.log(_ctx);
 
+    document.addEventListener('mousemove', handleEvent, false);
+
     drawGraph();
 
     setInterval(update, 0);
@@ -59,6 +61,17 @@ function update() {
     x += c;
 
     drawGraph();
+}
+
+function handleEvent(evt) {
+    switch (evt.type){
+        case "mousemove":
+            console.log(evt.clientX, evt.clientY);
+            break;
+        default:
+            console.log(evt);
+            break;
+    }
 }
 
 function drawLine(x1, y1, x2, y2, color) {
