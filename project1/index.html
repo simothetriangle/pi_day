@@ -37,21 +37,34 @@
             setInterval(update, 0);
         }
 
+        var mouse_xp = 0;
+        var mouse_yp = 0; 
+        var mouse_xn = 0;
+        var mouse_yn = 0;
+
         function update() {
             document.addEventListener('mousedown', handleEvent, false);
             document.addEventListener('mousemove', handleEvent, false);
             document.addEventListener('mouseup', handleEvent, false);
-        }
 
+            if (mouse_ck === 1) {
+                drawGraph();
+            }
+        }
+        
         function handleEvent(evt) {
             switch (evt.type){
                 case "mousedown" :
                     console.log(evt.clientX, evt.clientY, " down");
                     mouse_ck = 1;
+                    mouse_xp = evt.clientX;
+                    mouse_yp = evt.clientY;
                     break;
                 case "mousemove":
                     if( mouse_ck === 1){
                         console.log(evt.clientX, evt.clientY);
+                        mouse_xn = evt.clientX;
+                        mouse_yn = evt.clientY;
                     }
                     break;
                 case "mouseup" :
@@ -62,6 +75,12 @@
                     console.log(evt);
                     break;
             }
+        }
+
+        function drawGraph() {
+            _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
+
+            drawLine(mouse_xp, mouse_yp, mouse_xn, mouse_yn, "rba(0, 0, 0)");
         }
 
         function drawLine(x1, y1, x2, y2, color) {
