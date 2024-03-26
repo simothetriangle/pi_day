@@ -88,7 +88,7 @@ function drawGraph() {
     _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
 
     drawLine(0, 0, x, Math.sin(x / 50) * 100, "rgb(200,0,0)");
-    drawLine(0, 0, -x, Math.sin(x / 50) * 100, "rgb(0,0,250)");
+    drawLine(0, 0, -x, -Math.sin(x / 50) * 100, "rgb(0,0,250)");
 }
 
 /*

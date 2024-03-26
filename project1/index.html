@@ -14,14 +14,19 @@
         var mouse_ck = 0;
         var mouse_x ;
 
+        var canvas_width = 0;
+        var canvas_height = 0;
+
         window.onload = function() {
             var canvas = document.getElementById('canvas');
             _ctx = canvas.getContext('2d');
             // canvas 좌표크기설정
-            _ctx.canvas.width = 2000; //!!
+            _ctx.canvas.width = 1535; //!!
             _ctx.canvas.height = canvas.clientHeight / canvas.clientWidth * _ctx.canvas.width;
             _ox = _ctx.canvas.width / 2;
             _oy = _ctx.canvas.height / 2;
+            canvas_width = _ctx.canvas.width;
+            canvas_height = _ctx.canvas.height;
             console.log(_ctx);
 
             if (onmousedown) {
@@ -55,20 +60,24 @@
         function handleEvent(evt) {
             switch (evt.type){
                 case "mousedown" :
-                    console.log(evt.clientX, evt.clientY, " down");
+                    //console.log(evt.clientX, evt.clientY);
+                    console.log("down");
                     mouse_ck = 1;
                     mouse_xp = evt.clientX;
                     mouse_yp = evt.clientY;
+                    mouse_xn = evt.clientX;
+                    mouse_yn = evt.clientY;
                     break;
                 case "mousemove":
                     if( mouse_ck === 1){
-                        console.log(evt.clientX, evt.clientY);
+                        //console.log(evt.clientX, evt.clientY);
                         mouse_xn = evt.clientX;
                         mouse_yn = evt.clientY;
                     }
                     break;
                 case "mouseup" :
-                    console.log(evt.clientX, evt.clientY, " up");
+                    //console.log(evt.clientX, evt.clientY);
+                    console.log("up");
                     mouse_ck = 0;
                     break;
                 default:
@@ -80,7 +89,8 @@
         function drawGraph() {
             _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
 
-            drawLine(mouse_xp, mouse_yp, mouse_xn, mouse_yn, "rba(0, 0, 0)");
+            drawLine(mouse_xp - canvas_width/2, mouse_yp - canvas_height/2, mouse_xn - canvas_width/2, mouse_yn - canvas_height/2, "rba(0, 0, 0)");
+            drawLine(mouse_xp - canvas_width/2, 0, mouse_xn - canvas_width/2, 0, "rba(200, 0, 0)");
         }
 
         function drawLine(x1, y1, x2, y2, color) {
