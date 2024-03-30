@@ -21,10 +21,10 @@
             var canvas = document.getElementById('canvas');
             _ctx = canvas.getContext('2d');
             // canvas 좌표크기설정
-//            _ctx.canvas.width = 1535; //!!
-//            _ctx.canvas.height = canvas.clientHeight / canvas.clientWidth * _ctx.canvas.width;
-            _ctx.canvas.width = canvas.clientWidth;
-            _ctx.canvas.height = canvas.clientHeight;
+            _ctx.canvas.width = 2000; //!!
+            _ctx.canvas.height = canvas.clientHeight / canvas.clientWidth * _ctx.canvas.width;
+            //_ctx.canvas.width = canvas.clientWidth;
+            //_ctx.canvas.height = canvas.clientHeight;
             _ox = _ctx.canvas.width / 2;
             _oy = _ctx.canvas.height / 2;
             canvas_width = _ctx.canvas.width;
@@ -40,8 +40,11 @@
                 document.addEventListener('mousemove', handleEvent, false);
             }
             document.addEventListener('mouseup', handleEvent, false);*/
+            document.addEventListener('mousedown', handleEvent, false);
+            document.addEventListener('mousemove', handleEvent, false);
+            document.addEventListener('mouseup', handleEvent, false);
 
-            setInterval(update, 0);
+            setInterval(update, 100);
         }
 
         var mouse_xp = 0;
@@ -49,14 +52,34 @@
         var mouse_xn = 0;
         var mouse_yn = 0;
 
-        function update() {
-            document.addEventListener('mousedown', handleEvent, false);
-            document.addEventListener('mousemove', handleEvent, false);
-            document.addEventListener('mouseup', handleEvent, false);
+        var _zrot = 0;
+        var _xrot = 0;
 
-            if (mouse_ck === 1) {
-                drawGraph();
-            }
+        var _matxy_a = 1;
+        var _matxy_b = 0;
+        var _matxy_c = 0;
+        var _matxy_d = 1;
+
+        var _matyz_a = 1;
+        var _matyz_b = 0;
+        var _matyz_c = 0;
+        var _matyz_d = 1;
+
+        function updateMat()
+        {
+            _matxy_a = _matxy_d = Math.cos(_zrot);
+            _matxy_b = -(_matxy_c = Math.sin(_zrot));
+
+            _matyz_a = _matyz_d = Math.cos(_xrot);
+            _matyz_b = -(_matyz_c = Math.sin(_xrot));
+        }
+
+        function update() {
+            //_zrot += 0.05;
+            _xrot += 0.1;
+            updateMat();
+
+            drawGraph();
         }
         
         function handleEvent(evt) {
@@ -87,6 +110,42 @@
             }
         }
 
+        function matX_x(x, y, z) {
+            return x * _matxy_a + y * _matxy_c;
+        }
+        function matY_x(x, y, z) {
+            return x * _matxy_b + y * _matxy_d;
+        }
+
+        function matX(x, y, z) {
+            return matX_x(x, y, z);
+        }
+        function matY(x, y, z) {
+            return z * _matyz_b + matY_x(x, y, z) * _matyz_d;
+        }
+
+        function drawPolygon(n, point_midX, point_midY, point_midZ, r, angle) {
+            var point_sX = point_midX + r * Math.sin(angle);
+            var point_sY = point_midY + r * Math.cos(angle);
+            var point_nX = point_sX;
+            var point_nY = point_sY;
+            var point_pX = 0;
+            var point_pY = 0;
+            var angle_n = (angle / 180 * Math.PI) + Math.PI / n;
+            console.log(r);
+            
+            for(var ni = 0; ni < n; ni++) {
+                point_pX = point_nX;
+                point_pY = point_nY;
+                console.log(point_pX, point_pY);
+                point_nX += r * 2 * Math.sin(Math.PI / n) * Math.cos(angle_n);
+                point_nY -= r * 2 * Math.sin(Math.PI / n) * Math.sin(angle_n);
+                angle_n += 2 * Math.PI / n;
+                drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
+                         matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), "rgb(0, 0, 0)");
+            }
+        }
+
         function drawLine(x1, y1, x2, y2, color) {
             _ctx.beginPath();
             _ctx.moveTo(x1 + _ox, y1 + _oy);
@@ -100,9 +159,8 @@
 
         function drawGraph() {
             _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
-
-            drawLine(mouse_xp - canvas_width/2, mouse_yp - canvas_height/2, mouse_xn - canvas_width/2, mouse_yn - canvas_height/2, "rgb(0, 0, 0)");
-            drawLine(mouse_xp - canvas_width/2, 0, mouse_xn - canvas_width/2, 0, "rgba(200, 0, 0, 0.4)");
+            drawPolygon(4, 0, 0, -25, 50, 45);
+            drawPolygon(4, 0, 0, 25, 50, 45);
         }
 
     </script>
