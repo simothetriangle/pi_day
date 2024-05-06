@@ -55,8 +55,8 @@
         var _zrot = 0;
         var _xrot = 0;
 
-        var _deltzr = 0.05;
-        var _deltxr = 0.03;
+        var _deltzr = 0.03;
+        var _deltxr = 0.02;
 
         var _matxy_a = 1;
         var _matxy_b = 0;
@@ -78,15 +78,21 @@
         }
 
         function update() {
+            deltchk();
+
             _zrot += _deltzr;
             _xrot += _deltxr;
 
-            _zrot %= 2*Math.PI;
-            _xrot %= 2*Math.PI;
+            _zrot %= (2*Math.PI);
+            _xrot %= (2*Math.PI);
 
             updateMat();
 
             drawGraph();
+        }
+
+        function deltchk () {
+
         }
         
         function handleEvent(evt) {
@@ -131,7 +137,7 @@
             return z * _matyz_b + matY_x(x, y, z) * _matyz_d;
         }
 
-        function drawPolygon(n, point_midX, point_midY, point_midZ, r, angle, color) {
+        function drawPolygon(n, point_midX, point_midY, point_midZ, r, angle, color, color_b) {
             var point_sX = point_midX + r * Math.sin(angle);
             var point_sY = point_midY + r * Math.cos(angle);
             var point_nX = point_sX;
@@ -143,7 +149,7 @@
             
             var a = new Array(n);
             for(ni = 0; ni < n; ni++) {
-                a[ni] = new Array(2);
+                a[ni] = new Array(3);
             }
 
             for(var ni = 0; ni < n; ni++) {
@@ -154,44 +160,62 @@
                 point_nY -= r * 2 * Math.sin(Math.PI / n) * Math.sin(angle_n);
                 angle_n += 2 * Math.PI / n;
 
-                /*if (point_midZ / Math.abs(point_midZ) === 1) {
+                if (point_midZ / Math.abs(point_midZ) === 1) {
                     if (Math.PI/2 <= _xrot && 3*Math.PI/2 > _xrot) {
                         if(_xrot < Math.PI) {
                             if (matY(point_nX, point_nY, point_midZ) < matY(point_midX, point_midY, point_midZ)) {
                                 drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
                                     matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color);
+                                a[ni][2] = 1;
+                            } else {
+                                drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
+                                    matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color_b);
                             }
                         } else {
-                            if (matY(point_nX, point_nY, point_midZ) >= matY(point_midX, point_midY, point_midZ)) {
+                            if (matY(point_nX, point_nY, point_midZ) > matY(point_midX, point_midY, point_midZ)) {
                                 drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
                                     matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color);
+                                a[ni][2] = 1;
+                            } else {
+                                drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
+                                    matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color_b);
                             }
                         }
                     } else {
                         drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
                             matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color);
+                            a[ni][2] = 1;
                     }
                 } else {
                     if (Math.PI/2 <= _xrot && 3*Math.PI/2 > _xrot) {
                         drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
                             matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color);
+                        a[ni][2] = 1;
                     } else {
                         if(_xrot < Math.PI) {
                             if (matY(point_nX, point_nY, point_midZ) > matY(point_midX, point_midY, point_midZ)) {
                                 drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
                                     matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color);
+                                a[ni][2] = 1;
+                            } else {
+                                drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
+                                    matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color_b);
                             }
                         } else {
                             if (matY(point_nX, point_nY, point_midZ) <= matY(point_midX, point_midY, point_midZ)) {
                                 drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
                                     matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color);
+                                a[ni][2] = 1;
+                            } else {
+                                drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
+                                    matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color_b);
                             }
                         }
                     }
-                }*/
+                }
 
-                drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
-                    matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color);
+                //drawLine(matX(point_pX, point_pY, point_midZ), matY(point_pX, point_pY, point_midZ),
+                //    matX(point_nX, point_nY, point_midZ), matY(point_nX, point_nY, point_midZ), color);
 
                 a[ni][0] = matX(point_nX, point_nY, point_midZ);
                 a[ni][1] = matY(point_nX, point_nY, point_midZ);
@@ -217,24 +241,42 @@
             drawLine(-canvas_width/2, 0, canvas_width/2, 0, "rgba(0, 0, 0, 0.3)");
             drawLine(0, -canvas_height/2, 0, canvas_height/2, "rgba(0, 0, 0, 0.3)");
 
-            n=24;
+            n = 24;
 
             var poldep_up = new Array(n);
             var poldep_do = new Array(n);
             for (var ni = 0; ni < n; ni++) {
-                poldep_up[ni] = new Array(2);
-                poldep_do[ni] = new Array(2);
+                poldep_up[ni] = new Array(3);
+                poldep_do[ni] = new Array(3);
             }
 
             var midX = 0;
             var midY = 0;
             var midZ = 250;
+            var r = 250;
 
-            poldep_up = drawPolygon(n, midX, midY, -midZ, 250, 0, "rgb(0, 0, 0)");
-            poldep_do = drawPolygon(n, midX, midY, midZ, 250, 0, "rgb(0, 0, 0)");
+            midZ = r * Math.cos(Math.PI/n);
+
+            var col_pol = "rgb(0, 0, 0)"
+            var col_pol_b = "rgba(0, 0, 0, 0.1)";
+
+            poldep_up = drawPolygon(n, midX, midY, -midZ, r, 0, col_pol, col_pol_b);
+            poldep_do = drawPolygon(n, midX, midY, midZ, r, 0, col_pol, col_pol_b);
 
             for(var ni = 0; ni < n; ni++) {
-                drawLine(poldep_up[ni][0], poldep_up[ni][1], poldep_do[ni][0], poldep_do[ni][1], "rgb(0, 0, 0)");
+                if (Math.PI/2 <= _xrot && 3*Math.PI/2 > _xrot){
+                    if (poldep_do[ni][2] === 1) {
+                        drawLine(poldep_up[ni][0], poldep_up[ni][1], poldep_do[ni][0], poldep_do[ni][1], col_pol);
+                    } else {
+                        drawLine(poldep_up[ni][0], poldep_up[ni][1], poldep_do[ni][0], poldep_do[ni][1], col_pol_b);
+                    }
+                } else {
+                    if (poldep_up[ni][2] === 1) {
+                        drawLine(poldep_up[ni][0], poldep_up[ni][1], poldep_do[ni][0], poldep_do[ni][1], col_pol);
+                    } else {
+                        drawLine(poldep_up[ni][0], poldep_up[ni][1], poldep_do[ni][0], poldep_do[ni][1], col_pol_b);
+                    }
+                }
             }
         }
 

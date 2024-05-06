@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/style.css">
+        <title>Document</title>
+    </head>
+
+    <script type="text/javascript">
+
+        window.onload = function() {
+            var canvas = document.getElementById('canvas');
+            _ctx = canvas.getContext('2d');
+            // canvas 좌표크기설정
+            _ctx.canvas.width = 2000; //!!
+            _ctx.canvas.height = canvas.clientHeight / canvas.clientWidth * _ctx.canvas.width;
+            _ox = _ctx.canvas.width / 2;
+            _oy = _ctx.canvas.height / 2;
+            canvas_width = _ctx.canvas.width;
+            canvas_height = _ctx.canvas.height;
+            console.log(_ctx);
+
+            document.addEventListener('mousedown', handleEvent, false);
+            document.addEventListener('mousemove', handleEvent, false);
+            document.addEventListener('mouseup', handleEvent, false);
+
+            setInterval(update, 0);
+        }
+
+        function update() {
+            deltchk();
+
+            _zrot += _deltzr;
+            _xrot += _deltxr;
+
+            _zrot %= (2*Math.PI);
+            _xrot %= (2*Math.PI);
+
+            updateMat();
+
+            drawGraph();
+        }
+
+    </script>
+
+    <body>
+        <canvas id="canvas"></canvas>
+    </body>
+</html>
