@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/style.css">
+        <title>Multiple Pendulum</title>
+    </head>
+
+    <script type="text/javascript">
+        //varieties
+        var _ctx;
+        var _ox = 0;
+        var _oy = 0;
+        
+        var mouse_ck = 0;
+        var mouse_x ;
+
+        var canvas_width = 0;
+        var canvas_height = 0;
+
+        var contentsbox_width = 200;
+
+        var mouse_xp = 0;
+        var mouse_yp = 0; 
+        var mouse_xn = 0;
+        var mouse_yn = 0;
+
+        var hlpline_xp = 0;
+        var hlpline_yp = 0;
+        var hlpline_x = 0;
+        var hlpline_y = 0;
+
+        var arrayD = new Array(3);
+        for(var ni = 0; ni < arrayD.length; ni++) {
+            arrayD[ni] = new Array(4);
+        }
+        for(var ni = 0; ni < arrayD.length; ni++) {
+            arrayD[ni].fill(0);
+        }
+
+        var g, s, ang, l, m = 0;
+
+        //main
+        window.onload = function() {
+            var canvas = document.getElementById('canvas');
+            _ctx = canvas.getContext('2d');
+            // canvas 좌표크기설정
+//            _ctx.canvas.width = 1535; //!!
+//            _ctx.canvas.height = canvas.clientHeight / canvas.clientWidth * _ctx.canvas.width;
+            _ctx.canvas.width = canvas.clientWidth - contentsbox_width;
+            _ctx.canvas.height = canvas.clientHeight;
+            _ox = _ctx.canvas.width / 2;
+            _oy = _ctx.canvas.height / 2;
+            canvas_width = _ctx.canvas.width;
+            canvas_height = _ctx.canvas.height;
+            console.log(_ctx);
+
+            if (onmousedown) {
+                console.log(down);
+            }
+/*          document.addEventListener('mousedown', handleEvent, false);
+            if(mouse_ck === 1) {
+                console.log("moving");
+                document.addEventListener('mousemove', handleEvent, false);
+            }
+            document.addEventListener('mouseup', handleEvent, false);*/
+
+            document.addEventListener('mousedown', handleEvent, false);
+            document.addEventListener('mousemove', handleEvent, false);
+            document.addEventListener('mouseup', handleEvent, false);
+
+            Mdot_r = 3;
+            arrayD[0][0] = canvas_width/2;
+            arrayD[0][1] = canvas_height/2;
+            arrayD[1][0] = -100;
+            arrayD[1][1] = -100;
+            arrayD[2][0] = -100;
+            arrayD[2][1] = -100;
+            
+
+            setInterval(update, 0);
+        }
+
+        function update() {
+            drawGraph();
+        }
+        
+        function handleEvent(evt) {
+            mouse_xn = evt.clientX;
+            mouse_yn = evt.clientY;
+            
+            switch (evt.type){
+                case "mousedown" :
+                    //console.log(evt.clientX, evt.clientY);
+                    console.log("down", mouse_xn);
+                    mouse_ck = 1;
+                    mouse_xp = evt.clientX;
+                    mouse_yp = evt.clientY;
+                    
+                    break;
+                case "mousemove":
+                    if( mouse_ck === 1){
+                        //console.log(evt.clientX, evt.clientY);
+                    }
+                    break;
+                case "mouseup" :
+                    //console.log(evt.clientX, evt.clientY);
+                    console.log("up", mouse_xn - mouse_xp);
+                    mouse_ck = 0;
+                    break;
+                default:
+                    console.log(evt);
+                    break;
+            }
+        }
+
+        //draw functions
+        function drawLine(x1, y1, x2, y2, color, width) {
+            _ctx.beginPath();
+            _ctx.moveTo(x1 + _ox, y1 + _oy);
+            _ctx.lineTo(x2 + _ox, y2 + _oy);
+            _ctx.closePath();
+            _ctx.lineWidth = width;
+            _ctx.strokeStyle = color;
+            _ctx.stroke();
+        }
+
+        function drawDot(x, y, color, r) {
+            _ctx.beginPath();
+            _ctx.arc(x, y, r, 0, 2*Math.PI, false);
+            _ctx.fill();
+            _ctx.strokeStyle = color;
+            _ctx.stroke();
+        }
+
+        function drawGraph() {
+            _ctx.clearRect(0, 0, _ctx.canvas.width, _ctx.canvas.height);
+
+            varChg();
+
+            //hlp line
+            drawLine(hlpline_xp, hlpline_yp, hlpline_x, hlpline_y, "rgba(0, 0, 0, 0.2)", 1);
+            drawLine(hlpline_xp, 0, hlpline_x, 0, "rgba(200, 0, 0, 0.1)", 1);
+            drawLine(0, hlpline_yp, 0, hlpline_y, "rgba(0, 0, 200, 0.1)", 1);
+
+            //main dot
+            drawDot(arrayD[0][0], arrayD[0][1], "rgba(0, 0, 0, 1)", Mdot_r);
+
+            //pendulums
+            for(var ni = 0; ni < arrayD.length; ni++) {
+                
+            }
+        }
+
+        var lcnt = 0;
+
+        //calcul functions
+        function varChg() {
+            //checking click of lines
+            if(mouse_ck === 1) {
+                hlpline_x = mouse_xn - canvas_width/2;
+                hlpline_y = mouse_yn - canvas_height/2;
+
+                if(lcnt === 0) {
+                    hlpline_xp = hlpline_x;
+                    hlpline_yp = hlpline_y;
+
+                    lcnt = 1;
+                }
+            } else {
+                lcnt = 0;
+            }
+
+            //distant dots 0: x, 1: y, 2: distant 3: dot click check
+            for(var ni = 0; ni < 1; ni++) {
+                arrayD[ni][2] = distant(arrayD[ni][0], arrayD[ni][1], mouse_xn, mouse_yn);
+                //console.log(arrayD[0][2]);
+            }
+            
+            //movement of pendulum maindot
+            var nowclick = 0;
+
+            for(var ni = 0; ni < arrayD.length; ni++) {
+                if(arrayD[ni][2] <= Mdot_r + 2) {
+                    if(mouse_ck === 1) {
+                        var cnt = 0;
+
+                        for(var nj = 0; nj < arrayD.length; nj++) {
+                            if (ni !== nj && arrayD[nj][3] === 1) {
+                                cnt++;
+                            }
+                        }
+                        
+                        if(cnt === 0 && nowclick === 0) {
+                            arrayD[ni][3] = 1;
+                        } else {
+                            cnt = 0;
+                        }
+                        
+                    }
+                    else {
+                        arrayD[ni][3] = 0;
+                    }
+                } else if (mouse_ck === 0) {
+                    arrayD[ni][3] = 0;
+                }
+            }
+            
+                //console.log(arrayD[0][3])
+            for(var ni = 0; ni < arrayD.length; ni++) {
+                if(arrayD[ni][3] === 1) {
+                    if(mouse_xn < 0) {
+                        if(mouse_yn < 0) {
+                            arrayD[ni][0] = 0;
+                            arrayD[ni][1] = 0;
+                        } else if (mouse_yn > canvas_height) {
+                            arrayD[ni][0] = 0;
+                            arrayD[ni][1] = canvas_height;
+                        } else {
+                            arrayD[ni][0] = 0;
+                            arrayD[ni][1] = mouse_yn;
+                        }
+                    } else if (mouse_xn > canvas_width) {
+                        if(mouse_yn < 0) {
+                            arrayD[ni][0] = canvas_width;
+                            arrayD[ni][1] = 0;
+                        } else if (mouse_yn > canvas_height) {
+                            arrayD[ni][0] = canvas_width;
+                            arrayD[ni][1] = canvas_height;
+                        } else {
+                            arrayD[ni][0] = canvas_width;
+                            arrayD[ni][1] = mouse_yn;
+                        }
+                    } else {
+                        if(mouse_yn < 0) {
+                            arrayD[ni][0] = mouse_xn;
+                            arrayD[ni][1] = 0;
+                        } else if (mouse_yn > canvas_height) {
+                            arrayD[ni][0] = mouse_xn;
+                            arrayD[ni][1] = canvas_height;
+                        } else {
+                            arrayD[ni][0] = mouse_xn;
+                            arrayD[ni][1] = mouse_yn;
+                        }
+                    }
+                }
+            }
+
+            
+            
+            //pendulum movement
+
+            return;
+        }
+
+        //physic functions
+
+        //math functions
+        function AngtoRad(ang) {
+            return ang/180*Math.PI;
+        }
+
+        function powDB(a) {
+            return a * a;
+        }
+
+        function distant(x1, y1, x2, y2) {
+            //console.log(x1, y1, x2, y2);
+            return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+        }
+    </script>
+
+    <body>
+        <div id="screen">
+            <canvas id="canvas"></canvas>
+            <div id="contentsbox">
+                <input type="range" id="dot_cnt_rng" name="dot_cnt" min="1" max="3" value="1">
+                <input type="text">
+                <input type="text">
+                <input type="text">
+                <input type="button">
+            </div>
+        </div>
+    </body>
+</html>
