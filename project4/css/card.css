@@ -1,0 +1,12 @@
+.container {
+    width: 220px;
+    height: 310px;
+    transition: all 0.1s;
+    margin: 10px 10px;
+}
+.card {
+    width: 220px;
+    height: 310px;
+    background-image: url(/project4/img/Pikachu-V-vv043.jpg);
+    background-size: cover;
+}

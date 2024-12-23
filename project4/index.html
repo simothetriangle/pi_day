@@ -1,0 +1,82 @@
+<div class="container" onclick="n=1; cardfun_1();">
+    <div class="light"></div>
+    <div class="overlay"></div>
+    <div class="card_1"></div>
+</div>    
+
+<script>
+    var n = 0
+
+    //funcitons
+    function cardfun_1() {
+        if (num === 1) {
+            alert('click')
+        } else {
+            alert('click_error')
+        }
+    }
+
+    
+    
+
+    //cards
+    var container = document.querySelector('.container')
+    var overlay = document.querySelector('.overlay')
+    var light = document.querySelector('.light')
+
+    container.addEventListener('mousemove', function(e){
+        var x = e.offsetX
+        var y = e.offsetY
+        var rotateX = 4 / 31 * y - 20
+        var rotateY = -2 / 11 * x + 20
+
+        overlay.style = `background-position : ${x / 5 + y / 5}%`
+        container.style = `transform : perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
+        light.style = `radical-gradient(at ${x}px ${y}px, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1))`
+    })
+
+    container.addEventListener('mouseout', function(){
+        overlay.style = 'background-position : 100%'
+        container.style = 'transform : perspective(350px) rotateX(0deg) rotateY(0deg)'
+        light.style = 'radial-gradient(at center, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0))'
+    })
+</script>
+
+<style>
+    .container {
+        width: 220px;
+        height: 310px;
+        transition: all 0.1s;
+    }
+    .light {
+        position: absolute;
+        width: 220px;
+        height: 310px;
+        border-radius: 10px;
+        background: radial-gradient(at center, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0));
+    }
+    .overlay {
+        position: absolute;
+        width: 220px;
+        height: 310px;
+        border-radius: 10px;
+        background: linear-gradient(105deg, 
+        transparent 40%, 
+        rgba(255, 219, 112, 0.8) 45%, 
+        rgba(132, 50, 255, 0.6) 50%, 
+        transparent 54%);
+        filter: brightness(1.1) opacity(0.8);
+        mix-blend-mode: color-dodge;
+        background-size: 150% 150%;
+        background-position: 100%;
+        transition: all 0.1s;
+    }
+    .card_1 {
+        width: 220px;
+        height: 310px;
+        border-radius: 10px;
+        background-image: url(/project4/img/Pikachu-V-vv043.jpg);
+        background-size: cover;
+    }
+</style>
+
