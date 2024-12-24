@@ -1,45 +1,95 @@
-<div class="container" onclick="n=1; cardfun_1();">
-    <div class="light"></div>
-    <div class="overlay"></div>
-    <div class="card_1"></div>
-</div>    
+<div class="deck">
+    <div class="container" onclick="n=1; cardfun_1(n);">
+        <div class="light"></div>
+        <div class="overlay"></div>
+        <div class="card_1"></div>
+    </div>    
+</div>
+
 
 <script>
-    var n = 0
+    var n = 0;
+    var card_num = 5;
 
     //funcitons
-    function cardfun_1() {
+    function cardfun_1(num) {
         if (num === 1) {
-            alert('click')
+            alert('click');
         } else {
-            alert('click_error')
+            alert('click_error');
         }
     }
 
+    function matX (y, z, ym, zm, ang) {
+        
+    }
+
+    function matX_arr (arr, ang) {
+        var leg = length(arr);
+        
+        for (var ni = 0; ni < leg; ni++) {
+            
+        }
+    }
+
+    function polygon_node_coord(n, pmX, pmY, r) {
+        var psX = pmX; 
+        var psY = pmY + r;
+        var pnX = psX;
+        var pnY = psY;
+        var ppX = 0;
+        var ppY = 0;
+        var s = r * 2 * Math.sin(Math.PI / n);
+        var angle = 0;
+
+        var answ = new Array(n);
+        for(ni = 0; ni < n; ni++) {
+            answ[ni] = new Array(3);
+        }
+
+        for(ni = 0; ni < n; ni++) {
+            ppX = pnX;
+            ppY = pnY;
+            
+            pnX += s * Math.sin(Math.PI * (1 / 2 - 2 / n) - angle);
+            pnY -= s * Math.cos(Math.PI * (1 / 2 - 2 / n) - angle);
+            angle += 2 * Math.PI / n;
+
+            answ[ni][0] = ppX;
+            answ[ni][1] = ppY;
+            answ[ni][2] = 0;
+        }
+
+        return answ;
+    }
     
     
 
     //cards
-    var container = document.querySelector('.container')
-    var overlay = document.querySelector('.overlay')
-    var light = document.querySelector('.light')
+    var container = document.querySelector('.container');
+    var overlay = document.querySelector('.overlay');
+    var light = document.querySelector('.light');
 
     container.addEventListener('mousemove', function(e){
-        var x = e.offsetX
-        var y = e.offsetY
-        var rotateX = 4 / 31 * y - 20
-        var rotateY = -2 / 11 * x + 20
+        var dx = 220;
+        var dy = 310;
+        var x = e.offsetX;
+        var y = e.offsetY;
+        var rotateX = 4 / 31 * y - 20;
+        var rotateY = -2 / 11 * x + 20;
+        var rx = x / dx * 100;
+        var ry = y / dy * 100;
 
-        overlay.style = `background-position : ${x / 5 + y / 5}%`
-        container.style = `transform : perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
-        light.style = `radical-gradient(at ${x}px ${y}px, rgba(255, 255, 255, 0.1), rgba(0, 0, 0, 0.1))`
-    })
+        overlay.style = `background-position : ${x / 5 + y / 5}%`;
+        container.style = `transform : perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        light.style = `background : radial-gradient(at ${rx}% ${ry}%, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.15))`;
+    });
 
     container.addEventListener('mouseout', function(){
-        overlay.style = 'background-position : 100%'
-        container.style = 'transform : perspective(350px) rotateX(0deg) rotateY(0deg)'
-        light.style = 'radial-gradient(at center, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0))'
-    })
+        overlay.style = 'background-position : 100%';
+        container.style = 'transform : perspective(350px) rotateX(0deg) rotateY(0deg)';
+        light.style = 'background: rgba(0, 0, 0, 0.075)';
+    });
 </script>
 
 <style>
@@ -53,7 +103,7 @@
         width: 220px;
         height: 310px;
         border-radius: 10px;
-        background: radial-gradient(at center, rgba(255, 255, 255, 0), rgba(0, 0, 0, 0));
+        background: rgba(0, 0, 0, 0.075);
     }
     .overlay {
         position: absolute;
