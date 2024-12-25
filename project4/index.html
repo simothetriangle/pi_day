@@ -1,9 +1,24 @@
 <div class="deck">
-    <div class="container" onclick="n=1; cardfun_1(n);">
+    <div class="card_1 container" onclick="n=1; cardfun_1(n);">
         <div class="light"></div>
         <div class="overlay"></div>
-        <div class="card_1"></div>
-    </div>    
+        <div class="card_img_1"></div>
+    </div>
+    <div class="card_2 container" onclick="n=2; cardfun_1(n);">
+        <div class="light"></div>
+        <div class="overlay"></div>
+        <div class="card_img_2"></div>
+    </div>
+    <div class="card_3 container" onclick="n=2; cardfun_1(n);">
+        <div class="light"></div>
+        <div class="overlay"></div>
+        <div class="card_img_3"></div>
+    </div> 
+    <div class="card_4 container" onclick="n=2; cardfun_1(n);">
+        <div class="light"></div>
+        <div class="overlay"></div>
+        <div class="card_img_4"></div>
+    </div> 
 </div>
 
 
@@ -20,16 +35,55 @@
         }
     }
 
-    function matX (y, z, ym, zm, ang) {
-        
+    function matX_arr (arr, ang) {
+        var leg = arr.length;
+
+        var answ = new Array(leg);
+        for(ni = 0; ni < leg; ni++) {
+            answ[ni] = new Array(3);
+        }
+
+        for (ni = 0; ni < leg; ni++) {
+            answ[ni][0] = arr[ni][0];
+            answ[ni][1] = arr[ni][1] * Math.cos(ang) - arr[ni][2] * Math.sin(ang);
+            answ[ni][2] = arr[ni][1] * Math.sin(ang) + arr[ni][2] * Math.cos(ang);
+        }
+
+        return answ;
     }
 
-    function matX_arr (arr, ang) {
-        var leg = length(arr);
-        
-        for (var ni = 0; ni < leg; ni++) {
-            
+    function matY_arr (arr, ang) {
+        var leg = arr.length;
+
+        var answ = new Array(leg);
+        for(ni = 0; ni < leg; ni++) {
+            answ[ni] = new Array(3);
         }
+
+        for (ni = 0; ni < leg; ni++) {
+            answ[ni][0] = arr[ni][0] * Math.cos(ang) - arr[ni][2] * Math.sin(ang);
+            answ[ni][1] = arr[ni][1];
+            answ[ni][2] = arr[ni][0] * Math.sin(ang) + arr[ni][2] * Math.cos(ang);
+        }
+
+        return answ;
+    }
+
+    function matZ_arr (arr, ang) {
+        var leg = arr.length;
+
+        var answ = new Array(leg);
+        for(ni = 0; ni < leg; ni++) {
+            answ[ni] = new Array(3);
+        }
+
+        for (ni = 0; ni < leg; ni++) {
+            answ[ni][0] = arr[ni][0] * Math.cos(ang) - arr[ni][1] * Math.sin(ang);
+            answ[ni][1] = arr[ni][0] * Math.sin(ang) + arr[ni][1] * Math.cos(ang);
+            answ[ni][2] = arr[ni][2];
+        }
+
+        return answ;
     }
 
     function polygon_node_coord(n, pmX, pmY, r) {
@@ -63,33 +117,59 @@
         return answ;
     }
     
+    function card_deck () {
+        
+    }
+
     
 
-    //cards
-    var container = document.querySelector('.container');
-    var overlay = document.querySelector('.overlay');
-    var light = document.querySelector('.light');
+    //onload
+    window.onload = function() {
+        var containers = document.getElementsByClassName('container');
+        //var overlays = document.getElementsByClassName('overlay');
+        //var lights = document.getElementsByClassName('light');
 
-    container.addEventListener('mousemove', function(e){
-        var dx = 220;
-        var dy = 310;
-        var x = e.offsetX;
-        var y = e.offsetY;
-        var rotateX = 4 / 31 * y - 20;
-        var rotateY = -2 / 11 * x + 20;
-        var rx = x / dx * 100;
-        var ry = y / dy * 100;
+        for (ni = 0; ni < containers.length; ni++) {
+            //var overlay = overlays[ni];
+            var container = containers[ni];
+            //var light = lights[ni];
 
-        overlay.style = `background-position : ${x / 5 + y / 5}%`;
-        container.style = `transform : perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-        light.style = `background : radial-gradient(at ${rx}% ${ry}%, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.15))`;
-    });
+            container.addEventListener('mousemove', function(e) {
+                var cont = e.currentTarget;
+                var over = cont.getElementsByClassName("overlay")[0];
+                var ligh = cont.getElementsByClassName("light")[0];
 
-    container.addEventListener('mouseout', function(){
-        overlay.style = 'background-position : 100%';
-        container.style = 'transform : perspective(350px) rotateX(0deg) rotateY(0deg)';
-        light.style = 'background: rgba(0, 0, 0, 0.075)';
-    });
+                var dx = 220;
+                var dy = 310;
+                var x = e.offsetX;
+                var y = e.offsetY;
+                var rotateX = 4 / 31 * y - 20;
+                var rotateY = -2 / 11 * x + 20;
+                var rx = x / dx * 100;
+                var ry = y / dy * 100;
+
+                over.style = `background-position : ${x / 5 + y / 5}%`;
+                cont.style = `transform : perspective(350px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                light.style = `background : radial-gradient(at ${rx}% ${ry}%, rgba(255, 255, 255, 0.15), rgba(0, 0, 0, 0.15))`;
+            });
+
+            container.addEventListener('mouseout', function(e) {
+                var cont = e.currentTarget;
+                var over = cont.getElementsByClassName("overlay")[0];
+                var ligh = cont.getElementsByClassName("light")[0];
+
+                over.style = 'background-position : 100%';
+                cont.style = 'transform : perspective(350px) rotateX(0deg) rotateY(0deg)';
+                ligh.style = 'background: rgba(0, 0, 0, 0.075)';
+            });
+        }
+        
+        setInterval(update, 100);
+    }
+
+    function update() {
+
+    }
 </script>
 
 <style>
@@ -97,6 +177,26 @@
         width: 220px;
         height: 310px;
         transition: all 0.1s;
+    }
+    .card_1 {
+        position: absolute;
+        top: 0%;
+        left: 10%;
+    }
+    .card_2 {
+        position: absolute;
+        top: 20%;
+        left: 30%;
+    }
+    .card_3 {
+        position: absolute;
+        top: 40%;
+        left: 50%;
+    }
+    .card_4 {
+        position: absolute;
+        top: 60%;
+        left: 70%;
     }
     .light {
         position: absolute;
@@ -121,11 +221,34 @@
         background-position: 100%;
         transition: all 0.1s;
     }
-    .card_1 {
+    .card_img_1 {
+        top: 50%;
+        left: 50%;
         width: 220px;
         height: 310px;
         border-radius: 10px;
         background-image: url(/project4/img/Pikachu-V-vv043.jpg);
+        background-size: cover;
+    }
+    .card_img_2 {
+        width: 220px;
+        height: 310px;
+        border-radius: 10px;
+        background-image: url(/project4/img/isanghe_ggot.jpg);
+        background-size: cover;
+    }
+    .card_img_3 {
+        width: 220px;
+        height: 310px;
+        border-radius: 10px;
+        background-image: url(/project4/img/gubukwang-Vmax.jpg);
+        background-size: cover;
+    }
+    .card_img_4 {
+        width: 220px;
+        height: 310px;
+        border-radius: 10px;
+        background-image: url(/project4/img/lizamon-Vstar.jpg);
         background-size: cover;
     }
 </style>
